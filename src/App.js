@@ -88,7 +88,8 @@ int main(){
       url: '/api/run',
       data: {
         lang: this.state.lang.split("|")[1],
-        code: this.state.code
+        code: this.state.code,
+        input: this.state.stdin,
       }
     }).then(function (response) {
 
