@@ -68,8 +68,10 @@ int main(){
   }
 
   languageChange = (e) => {
+
     console.log(e.target.value)
-    this.setState({ lang: e.target.value });
+    // 切换语言，清空代码和输入输出
+    this.setState({ lang: e.target.value, code:"", stdin:"", stdout:"" });
   }
   themeChange = (e) => {
     console.log(e.target.value)
