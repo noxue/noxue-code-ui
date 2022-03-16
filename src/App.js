@@ -31,7 +31,7 @@ class App extends React.Component {
     stdin: '', // 标准输入内容
     stdout: '', // 标准输出
     stderr: '', // 标准错误输出
-    tabIndex: 0, // 指定显示的选项卡
+    tabIndex: 0, // 指定显示的选项卡 0:显示输出，1显示输入
     running: false, // 记录是否在运行代码
   }
 
@@ -48,12 +48,22 @@ class App extends React.Component {
   ]
 
   componentDidMount() {
+    const that = this
+    // 禁止ctrl+s
+    window.addEventListener('keydown', function (e) {
+      if (e.keyCode == 83 && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        that.runCode(1)
+      }
+    })
+
     this.setState({
       code: `#include <stdio.h>
-
+// 欢迎使用不学网(noxue.com)提供的在线编译器
+// Ctrl+S 自动编译
 int main(){
-  printf("hello world");
-  return 0;
+    printf("做人如果没有梦想，那和咸鱼有什么分别！");
+    return 0;
 }`})
   }
 
@@ -102,15 +112,19 @@ int main(){
 
       console.log(response)
 
-      that.setState({ running: false });
+      // 请求结束后，切换到输出界面，并清空输入内容
+      that.setState({ running: false, tabIndex: 0, stdin: "" });
 
     }).catch((e) => {
       console.log("请求出错:", e)
+      alert("请求出错，请联系管理员");
       that.setState({ running: true });
     });
   }
 
   render() {
+
+    
 
     return (
       <div className="app">
