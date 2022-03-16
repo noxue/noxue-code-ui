@@ -1,38 +1,119 @@
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.tool-bar{
+  display: flex;
+  flex-direction: row-reverse;
+  height:40px;
+  line-height: 40px;
+  background-color: #333;
+  color:#f7f7f7;
+  font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.tool-bar>div{
+  margin:auto 10px;
+}
+
+
+.tool-bar>div>label{
+  margin-right: 5px;
+}
+
+.result{
+  width:100%;
+}
+
+.stdin,.stdout{
+  width:100vw;
+  background:#fff;
+}
+
+
+
+.stdin>textarea, .stdout>textarea{
+  width:calc(100vw - 12px);
+  height: calc(100vh - 592px);
+  min-height: 100px;
+  margin:0 5px;
+  padding:0;
+  padding-top:10px;
+  border:0;
+  color:#333;
+  background:#f7f7f7;
+}
+
+.stdin,.stdin>textarea{
+  background-color: #fff;
+  color:#000;
+}
+
+.stdout,.stdout>textarea{
+  background-color: #000;
+  color:#fff;
+}
+
+
+.stdin>textarea:focus{
+  outline: none !important;
+}
+
+.tabs{
+  position: relative;
+  display: flex;
+  box-shadow:0px 0px 5px 0px #000;
+  z-index: 1;
+}
+
+.tabs>div{
+  height:30px;
+  line-height: 30px;
+  cursor: pointer;
+  padding:5px 20px;
+}
+
+.tabs>div.run-code{
+  margin:auto 10px;
+  margin-left:50px;
+  padding-left:20px;
+  padding-right: 20px;
+  background: rgb(13, 174, 248);
+  color:#fff;
+  height:20px;
+  line-height: 20px;
+  border-radius: 10px;
+}
+
+.run-code:hover{
+  background: rgb(110, 202, 245);
+}
+
+.loading{
+  background:#00000099;
+  position:absolute;
+  width:100vw;
+  height:100vh;
+  z-index: 100;
+}
+
+.loading>.ani{
+  position: relative;
+  top:calc(50vh - 32px);
+  left:calc(50vw - 32px);
+}
+
+
+.links>a{
+  color:#fff;
+  text-decoration: none;
+  margin:auto 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .links>a{
+    display: none;
   }
 }
