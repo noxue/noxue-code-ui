@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -16,5 +19,14 @@
   <body>
     <noscript>你浏览器不支持js，见了鬼了，用谷歌浏览器吧。</noscript>
     <div id="root"></div>
+    <script>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?9d69380d7fc4b37d3c3fa08712139d3f";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
   </body>
 </html>
