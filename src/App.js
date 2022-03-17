@@ -124,7 +124,7 @@ int main(){
     }).catch((e) => {
       console.log("请求出错:", e)
       alert("请求出错，请联系管理员");
-      that.setState({ running: true });
+      that.setState({ running: false });
     });
   }
 
