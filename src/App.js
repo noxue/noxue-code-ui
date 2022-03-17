@@ -140,7 +140,7 @@ int main(){
       const res = response.data;
 
       if (res.code !== 0) {
-        that.setState({ stdout: res.msg });
+        that.setState({ stdout: res.msg, stderr:'' });
         return;
       }
 
