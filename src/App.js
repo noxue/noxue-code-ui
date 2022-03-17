@@ -53,6 +53,7 @@ class App extends React.Component {
     window.addEventListener('keydown', function (e) {
       if (e.keyCode === 83 && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
+        if (that.state.running) return;
         that.runCode(1)
       }
     })
@@ -62,14 +63,33 @@ class App extends React.Component {
       ev.preventDefault();
     }, { passive: false });
 
-    this.setState({
-      code: `#include <stdio.h>
+
+    let defaultCode = `#include <stdio.h>
+
 // 欢迎使用不学网(noxue.com)提供的在线编译器
-// Ctrl+S 自动编译
+// 快捷键 Ctrl+S 自动编译
+// 代码会自动保存，打开浏览器依然存在
 int main(){
-    printf("做人如果没有梦想，那和咸鱼有什么分别！");
-    return 0;
-}`})
+  printf("做人如果没有梦想，那和咸鱼有什么分别！");
+  return 0;
+}
+`
+
+
+    let code = localStorage.getItem("noxue-code");
+    this.setState({
+      code: code ? code : defaultCode
+    })
+
+    let lang = localStorage.getItem("noxue-lang");
+    let theme = localStorage.getItem("noxue-theme");
+
+    if (lang) {
+      this.setState({ lang })
+    }
+    if (theme) {
+      this.setState({ theme })
+    }
   }
 
   languageChange = (e) => {
@@ -77,15 +97,18 @@ int main(){
     console.log(e.target.value)
     // 切换语言，清空代码和输入输出
     this.setState({ lang: e.target.value, stdin: "", stdout: "" });
+    window.localStorage.setItem("noxue-lang", e.target.value);
   }
   themeChange = (e) => {
     console.log(e.target.value)
     this.setState({ theme: e.target.value });
+    window.localStorage.setItem("noxue-theme", e.target.value);
   }
 
   codeChange = (value) => {
     console.log(value)
     this.setState({ code: value })
+    window.localStorage.setItem("noxue-code", value);
   }
 
   stdinChange = (e) => {
@@ -111,20 +134,24 @@ int main(){
       }
     }).then(function (response) {
 
+      // 请求结束后，切换到输出界面，并清空输入内容
+      that.setState({ running: false, tabIndex: 0, stdin: "" });
+
       const res = response.data;
+
+      if (res.code !== 0) {
+        that.setState({ stdout: res.msg });
+        return;
+      }
 
       that.setState({
         stdout: res.data.stdout,
         stderr: res.data.stderr,
       })
 
-      // 请求结束后，切换到输出界面，并清空输入内容
-      that.setState({ running: false, tabIndex: 0, stdin: "" });
-
     }).catch((e) => {
       console.log("请求出错:", e)
-      alert("请求出错，请联系管理员");
-      that.setState({ running: false });
+      that.setState({ running: false, stdout: "请求出错:" + e });
     });
   }
 
