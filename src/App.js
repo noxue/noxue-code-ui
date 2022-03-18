@@ -69,6 +69,8 @@ class App extends React.Component {
 // 欢迎使用不学网(noxue.com)提供的在线编译器
 // 快捷键 Ctrl+S 自动编译
 // 代码会自动保存，打开浏览器依然存在
+// 发现bug或者漏洞，欢迎在github提交给我，也可以微信告知我，感激不尽。
+// 微信号:noxuecom
 int main(){
   printf("做人如果没有梦想，那和咸鱼有什么分别！");
   return 0;
@@ -140,7 +142,7 @@ int main(){
       const res = response.data;
 
       if (res.code !== 0) {
-        that.setState({ stdout: res.msg, stderr:'' });
+        that.setState({ stdout: res.msg, stderr: '' });
         return;
       }
 
