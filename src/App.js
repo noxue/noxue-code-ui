@@ -6,11 +6,21 @@ import 'reset-css';
 import CodeMirror from '@uiw/react-codemirror';
 import { StreamLanguage } from '@codemirror/stream-parser';
 import { go } from '@codemirror/legacy-modes/mode/go';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { perl } from '@codemirror/legacy-modes/mode/perl';
 import { ruby } from '@codemirror/legacy-modes/mode/ruby';
+import { lua } from '@codemirror/legacy-modes/mode/lua';
+import { swift } from '@codemirror/legacy-modes/mode/swift';
+import { textile } from '@codemirror/legacy-modes/mode/textile';
 import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
 import { php } from "@codemirror/lang-php";
 import { rust } from '@codemirror/lang-rust';
+import { java } from '@codemirror/lang-java';
+import { javascript } from '@codemirror/lang-javascript';
+
+
+
 
 
 import ReactLoading from "react-loading";
@@ -32,12 +42,32 @@ class App extends React.Component {
   themes = ["dark", "light"]
 
   // 语言列表
-  langs = ["c", "cpp", "rust", "golang", "python2", "python3", "php5", "php7", "php8", "ruby"]
+  langs = [
+    "rust",
+    "c", "c89", "c99", "c11", "c17",
+    "cpp", "cpp98", "cpp11", "cpp14", "cpp17", "cpp20", "cpp23",
+    "java", "nasm", "golang",
+    "python2", "python3",
+    "php5", "php7", "php8",
+    "nodejs", "shell", "swift", "ruby", "perl",
+  ]
 
   langModes = {
     "c": cpp(),
+    "c89": cpp(),
+    "c99": cpp(),
+    "c11": cpp(),
+    "c17": cpp(),
     "cpp": cpp(),
+    "cpp98": cpp(),
+    "cpp11": cpp(),
+    "cpp14": cpp(),
+    "cpp17": cpp(),
+    "cpp20": cpp(),
+    "cpp23": cpp(),
     "rust": rust(),
+    "java": java(),
+    "nasm": StreamLanguage.define(textile),
     "golang": StreamLanguage.define(go),
     "php5": php(),
     "php7": php(),
@@ -45,6 +75,10 @@ class App extends React.Component {
     "python2": python(),
     "python3": python(),
     "ruby": StreamLanguage.define(ruby),
+    "shell": StreamLanguage.define(shell),
+    "nodejs": javascript(),
+    "perl": StreamLanguage.define(perl),
+    "swift": StreamLanguage.define(swift)
   }
 
   componentDidMount() {
