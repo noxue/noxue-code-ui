@@ -92,11 +92,20 @@ class App extends React.Component {
       }
     })
 
+
+    // 移动端textarea无法滚动问题
+    window.addEventListener('touchmove',function(e){
+      let target = e.target
+      if(target && target.tagName === 'TEXTAREA'){ 
+        e.stopPropagation();
+      }
+    },true)
+
+
     // 禁止手机浏览器下拉
     document.addEventListener('touchmove', function (ev) {
       ev.preventDefault();
     }, { passive: false });
-
 
     let defaultCode = `#include <stdio.h>
 
@@ -110,7 +119,6 @@ int main(){
   return 0;
 }
 `
-
 
     let code = localStorage.getItem("noxue-code");
     this.setState({
@@ -129,7 +137,6 @@ int main(){
   }
 
   languageChange = (e) => {
-
     console.log(e.target.value)
     // 切换语言，清空代码和输入输出
     this.setState({ lang: e.target.value, stdin: "", stdout: "" });
