@@ -28,6 +28,9 @@ import ReactLoading from "react-loading";
 class App extends React.Component {
 
   state = {
+    editorHeight: 500, // 编辑器高度，用于分隔条自动拖动
+    isDrag: false, // 分隔栏，是否正在拖动
+    prevPos: 0, // 记录上一个拖动事件的y坐标
     theme: 'dark', // 编辑器主题
     code: '', // 初始代码
     lang: 'c', // 默认语言
@@ -81,6 +84,12 @@ class App extends React.Component {
     "swift": StreamLanguage.define(swift)
   }
 
+  constructor(props) {
+    super();
+    this.editerRef = React.createRef();
+    this.resultRef = React.createRef();
+  }
+
   componentDidMount() {
     const that = this
     // 禁止ctrl+s
@@ -94,18 +103,20 @@ class App extends React.Component {
 
 
     // 移动端textarea无法滚动问题
-    window.addEventListener('touchmove',function(e){
+    window.addEventListener('touchmove', function (e) {
       let target = e.target
-      if(target && target.tagName === 'TEXTAREA'){ 
+      if (target && target.tagName === 'TEXTAREA') {
         e.stopPropagation();
       }
-    },true)
+    }, true)
 
 
     // 禁止手机浏览器下拉
     document.addEventListener('touchmove', function (ev) {
       ev.preventDefault();
     }, { passive: false });
+
+
 
     let defaultCode = `#include <stdio.h>
 
@@ -198,10 +209,58 @@ int main(){
     });
   }
 
+  // 鼠标按下时，设置为开始拖动
+  tabsMouseDown = (e) => {
+    console.log(this.editerRef.current.view.dom.clientHeight)
+    console.log(this.resultRef.current.clientHeight)
+    this.setState({ isDrag: true, prevPos: 0 })
+  }
+
+  // 鼠标移动时，如果已经开始拖动，那就根据鼠标上下的移动距离修改编辑器高度
+  tabsMouseMove = (e) => {
+    console.log("move:", e)
+    if (this.state.isDrag) {
+
+      // 为了兼容移动端和电脑端
+      const screenY = e.screenY || e.touches[0].screenY;
+
+      // 相同值不处理，因为没移动
+      if (this.state.prevPos === screenY) return;
+
+      // 如果初始值为0，需要先记录第一个值
+      if (this.state.prevPos === 0) {
+        this.setState({
+          prevPos: screenY
+        })
+        return;
+      }
+
+
+      console.log(this.state.editorHeight, this.state.prevPos, screenY);
+
+      // 处理后记录当前值，作为下次移动参考,同时改变编辑器大小
+      this.setState({
+        editorHeight: this.state.editorHeight + (screenY - this.state.prevPos),
+        prevPos: screenY
+      })
+    }
+  }
+
+  // 鼠标松开时，停止拖动
+  tabsMouseUp = (e) => {
+    this.setState({ isDrag: false, prevPos: 0 })
+  }
+
+
   render() {
 
     return (
-      <div className="app">
+      <div className="app"
+        onMouseMove={this.tabsMouseMove}
+        onMouseUp={this.tabsMouseUp}
+        onTouchMove={this.tabsMouseMove}
+        onTouchEnd={this.tabsMouseUp}
+      >
         <div className="loading" style={{ display: this.state.running ? "block" : "none" }}>
           <ReactLoading className="ani" type="spinningBubbles" color="#fff" />
         </div>
@@ -232,17 +291,19 @@ int main(){
         </div>
 
         <CodeMirror
+          ref={this.editerRef}
           value={this.state.code}
-          height="500px"
+          height={this.state.editorHeight + "px"}
           width='100%'
           theme={this.state.theme}
           extensions={[this.langModes[this.state.lang]]}
           onChange={this.codeChange}
         />
 
-        <div className='result'>
+        {/* 高度根据编辑器高度自动计算，这样只要修改编辑器高度就可以实现分割条的自由拖动 */}
+        <div className='result' ref={this.resultRef} style={{ height: "calc(100vh - " + (this.state.editorHeight + 41) + "px)" }}>
 
-          <div className='tabs'>
+          <div className='tabs' onMouseDown={this.tabsMouseDown} onTouchStart={this.tabsMouseDown} style={{ cursor: this.state.isDrag ? "grab" : "" }}>
             <div onClick={(e) => {
               this.setState({ tabIndex: 0 })
             }}>标准输出</div>
